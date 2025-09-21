@@ -1,0 +1,166 @@
+#!/usr/bin/env python3
+"""
+Hybrid API - Working structure with optional real generation
+"""
+
+from fastapi import FastAPI, Form, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import json
+import tempfile
+import os
+import shutil
+import uuid
+import sys
+
+app = FastAPI(title="KalpanaAI Storytelling API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Create directory for serving generated assets
+os.makedirs("generated_assets", exist_ok=True)
+app.mount("/generated", StaticFiles(directory="generated_assets"), name="generated")
+
+@app.get("/")
+async def root():
+    return {"message": "KalpanaAI Storytelling API - Hybrid"}
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "version": "hybrid-v1"}
+
+@app.post("/api/storytelling/generate")
+async def generate_storytelling_kit(
+    description: str = Form(...),
+    photo: UploadFile = File(None),
+    enable_generation: str = Form("false")  # Add flag to enable actual generation
+):
+    """
+    Generate storytelling kit with optional real generation
+    """
+    try:
+        should_generate = enable_generation.lower() == "true"
+        
+        if should_generate:
+            # Try real generation
+            try:
+                # Add the correct paths to Python path
+                project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                agents_path = os.path.join(project_root, "Agents", "agents")
+                sys.path.insert(0, agents_path)
+                
+                # Import agents carefully
+                from storyteller_agent import StorytellerAgent
+                
+                # Create temporary directory
+                temp_dir = tempfile.mkdtemp()
+                
+                try:
+                    storyteller = StorytellerAgent()
+                    image_prompts = storyteller.generate_image_prompts(description)
+                    validated_prompts = storyteller.validate_prompts(image_prompts, description)
+                    
+                    # For now, just return the story content without images to avoid crashes
+                    return {
+                        "status": "success",
+                        "message": "Story generated successfully!",
+                        "marketing_kit": {
+                            "story_title": validated_prompts.get("story_title", f"Story for {description}"),
+                            "story_text": validated_prompts.get("story_text", f"A beautiful story about {description}"),
+                            "emotional_theme": validated_prompts.get("emotional_theme", "authentic"),
+                            "assets": {
+                                "story_images": [],
+                                "image_prompts": validated_prompts.get("image_prompts", [])
+                            }
+                        },
+                        "productPosts": [
+                            {
+                                "id": "post-1",
+                                "title": validated_prompts.get("story_title", f"Story for {description}"),
+                                "description": validated_prompts.get("story_text", f"A beautiful story about {description}")[:200] + "...",
+                                "image_url": None,  # No image generation yet
+                                "style": "professional",
+                                "platform": "instagram"
+                            }
+                        ],
+                        "generated_images_count": 0,
+                        "story_generation": "enabled"
+                    }
+                    
+                finally:
+                    try:
+                        shutil.rmtree(temp_dir)
+                    except:
+                        pass
+                        
+            except Exception as e:
+                # Fall back to placeholder if real generation fails
+                should_generate = False
+                error_msg = str(e)
+        
+        # Fallback to placeholder data
+        return {
+            "status": "success",
+            "message": "Placeholder data generated" + (f" (real generation failed: {error_msg})" if 'error_msg' in locals() else ""),
+            "marketing_kit": {
+                "story_title": f"The Artisan's Tale: {description}",
+                "story_text": f"In the heart of India's rich cultural landscape, skilled artisans pour their heritage into every {description}. Each piece tells a story of tradition, craftsmanship, and the timeless beauty of handmade excellence.",
+                "emotional_theme": "authentic heritage",
+                "assets": {
+                    "story_images": [],
+                    "image_prompts": [
+                        f"Professional photography of {description} showcasing intricate craftsmanship",
+                        f"Artisan hands working on {description} in traditional workshop setting",
+                        f"Beautiful lifestyle shot featuring {description} in elegant home setting"
+                    ]
+                }
+            },
+            "productPosts": [
+                {
+                    "id": "post-1",
+                    "title": f"The Artisan's Tale: {description}",
+                    "description": f"Experience the timeless beauty of handcrafted {description}. Each piece is a testament to generations of skilled artisanship, bringing authentic Indian heritage into your everyday life.",
+                    "image_url": None,
+                    "style": "professional",
+                    "platform": "instagram"
+                },
+                {
+                    "id": "post-2",
+                    "title": f"Heritage Craftsmanship: {description}",
+                    "description": f"Discover the story behind every {description} - where traditional techniques meet contemporary elegance. Support local artisans and bring home a piece of India's cultural legacy.",
+                    "image_url": None,
+                    "style": "lifestyle", 
+                    "platform": "facebook"
+                }
+            ],
+            "generated_images_count": 0,
+            "story_generation": "placeholder" if not should_generate else "attempted"
+        }
+        
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": f"Generation failed: {str(e)}",
+            "error_type": type(e).__name__,
+            "productPosts": []
+        }
+
+# Test endpoints
+@app.post("/test")
+async def test_endpoint():
+    return {"message": "Test POST endpoint working"}
+
+@app.get("/test")
+async def test_get_endpoint():
+    return {"message": "Test GET endpoint working"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8080)

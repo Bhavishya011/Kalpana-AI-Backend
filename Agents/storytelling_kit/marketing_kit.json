@@ -1,0 +1,95 @@
+{
+  "overview": {
+    "status": "success",
+    "description": "Complete storytelling marketing kit for Indian artisan",
+    "artisan_description": "This is a blue pot I made with peacock and lotus flowers, using traditional Jaipur techniques passed down from my grandfather.",
+    "story_title": "The Soul of the Clay",
+    "emotional_theme": "Hope and Perseverance",
+    "region": "Rajasthan (Jaipur Blue Pottery)"
+  },
+  "assets": {
+    "story_images": [
+      "story_image_1.jpg",
+      "story_image_2.jpg",
+      "story_image_3.jpg"
+    ],
+    "social_post": "story_post.jpg"
+  },
+  "content": {
+    "storytelling": {
+      "story_title": "The Soul of the Clay",
+      "emotional_theme": "Hope and Perseverance",
+      "image_prompts": [
+        "A close-up shot of an artisan's hands, weathered and stained with earth pigments, gently shaping a lump of clay into a diya (oil lamp). The scene is set in a rural village in Rajasthan, India, during the monsoon season. Rain streams down outside, visible through the open doorway of the mud-brick workshop. The only light source is a single oil lamp, casting warm shadows on the artisan's face and highlighting the intricate details of the clay. The artisan's expression is one of quiet determination, reflecting the 'karuṇā' (compassion) infused into their work. Style: Photorealistic, high detail, shallow depth of field, dramatic lighting, earthy tones.",
+        "A panoramic view of a group of women artisans in a Gujarat village, sitting on the ground in a circle, hand-building pottery. They are surrounded by stacks of unfired clay pots, drying in the sun. The women are wearing vibrant, traditional clothing with mirror work. In the background, a banyan tree provides shade, and children play nearby. The atmosphere is one of community and collaboration, reflecting the 'kala' (art) and shared heritage. The scene is bathed in the warm, golden light of the late afternoon sun. Style: Photorealistic, wide angle, vibrant colors, natural lighting, sense of community.",
+        "A young artisan, a girl, carefully painting intricate floral patterns on a terracotta vase using natural pigments derived from plants and minerals. The scene takes place in a dimly lit workshop in West Bengal. Sunlight streams through a small window, illuminating the girl's face and the vibrant colors of the pigments. The vase is adorned with traditional Bengali motifs, reflecting the region's rich cultural heritage. Her brow is furrowed in concentration as she meticulously applies each brushstroke, embodying the dedication and intention behind each piece. Style: Photorealistic, soft lighting, close-up, high detail, focus on the artisan's expression."
+      ],
+      "cultural_elements": [
+        "Hand-building pottery",
+        "Natural pigments",
+        "Diya (oil lamp)",
+        "Traditional Indian clothing",
+        "Bengali motifs"
+      ],
+      "recommended_hashtags": [
+        "IndianArtisan",
+        "HandmadePottery",
+        "CulturalHeritage",
+        "IndianCraft",
+        "SustainableArt"
+      ],
+      "artisan_input": "This is a blue pot I made with peacock and lotus flowers, using traditional Jaipur techniques passed down from my grandfather.",
+      "prompt_count": 3
+    },
+    "ecommerce": {
+      "title": "The Soul of the Clay | Handcrafted by India Artisan",
+      "description": "Experience the story behind this creation: Hope and Perseverance. This piece represents generations of tradition and cultural heritage. Each element carries deep meaning in Indian craftsmanship, connecting you to the artisan's journey and the cultural wisdom passed down through generations.",
+      "story_section": {
+        "headline": "The Soul of the Clay",
+        "narrative": "A close-up shot of an artisan's hands, weathered and stained with earth pigments, gently shaping a lump of clay into a diya (oil lamp). The scene is set in a rural village in Rajasthan, India, during the monsoon season. Rain streams down outside, visible through the open doorway of the mud-brick workshop. The only light source is a single oil lamp, casting warm shadows on the artisan's face and highlighting the intricate details of the clay. The artisan's expression is one of quiet determination, reflecting the 'karuṇā' (compassion) infused into their work. Style: Photorealistic, high detail, shallow depth of field, dramatic lighting, earthy tones.\n\nA panoramic view of a group of women artisans in a Gujarat village, sitting on the ground in a circle, hand-building pottery. They are surrounded by stacks of unfired clay pots, drying in the sun. The women are wearing vibrant, traditional clothing with mirror work. In the background, a banyan tree provides shade, and children play nearby. The atmosphere is one of community and collaboration, reflecting the 'kala' (art) and shared heritage. The scene is bathed in the warm, golden light of the late afternoon sun. Style: Photorealistic, wide angle, vibrant colors, natural lighting, sense of community.\n\nA young artisan, a girl, carefully painting intricate floral patterns on a terracotta vase using natural pigments derived from plants and minerals. The scene takes place in a dimly lit workshop in West Bengal. Sunlight streams through a small window, illuminating the girl's face and the vibrant colors of the pigments. The vase is adorned with traditional Bengali motifs, reflecting the region's rich cultural heritage. Her brow is furrowed in concentration as she meticulously applies each brushstroke, embodying the dedication and intention behind each piece. Style: Photorealistic, soft lighting, close-up, high detail, focus on the artisan's expression.",
+        "cultural_significance": "In India tradition, these elements represent Hand-building pottery, Natural pigments. This practice has been preserved through generations as a sacred art form, embodying the Indian concept of 'shilp' - where art and spirituality intertwine."
+      },
+      "product_representation": {
+        "description": "This product is a physical representation of the story above",
+        "meaning": "Rather than just a functional item, this creation embodies cultural heritage and emotional meaning. The physical form serves as a vessel for the story and tradition it represents."
+      },
+      "tags": [
+        "Hand-building pottery",
+        "Natural pigments",
+        "Diya (oil lamp)",
+        "Traditional Indian clothing",
+        "Bengali motifs",
+        "Indian",
+        "artisan",
+        "handmade",
+        "story",
+        "cultural heritage",
+        "traditional",
+        "IndianArtisan",
+        "HandmadePottery",
+        "CulturalHeritage",
+        "IndianCraft",
+        "SustainableArt"
+      ],
+      "indian_platform_specifics": {
+        "flipkart": {
+          "category": "Home & Kitchen > Decor > Handicrafts",
+          "attributes": {
+            "Craft Type": "Storytelling Art Piece",
+            "Region": "India",
+            "Story Theme": "Hope and Perseverance",
+            "Cultural Elements": "Hand-building pottery, Natural pigments, Diya (oil lamp), Traditional Indian clothing, Bengali motifs"
+          }
+        },
+        "meesho": {
+          "category": "Home Decor > Storytelling Art",
+          "attributes": {
+            "Story Title": "The Soul of the Clay",
+            "Emotional Theme": "Hope and Perseverance",
+            "Cultural Elements": "Hand-building pottery, Natural pigments, Diya (oil lamp), Traditional Indian clothing, Bengali motifs"
+          }
+        }
+      }
+    }
+  }
+}

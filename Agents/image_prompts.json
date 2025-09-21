@@ -1,0 +1,25 @@
+{
+  "story_title": "The Soul of the Clay",
+  "emotional_theme": "Hope and Perseverance",
+  "image_prompts": [
+    "A close-up shot of an artisan's hands, weathered and stained with earth pigments, gently shaping a lump of clay into a diya (oil lamp). The scene is set in a rural village in Rajasthan, India, during the monsoon season. Rain streams down outside, visible through the open doorway of the mud-brick workshop. The only light source is a single oil lamp, casting warm shadows on the artisan's face and highlighting the intricate details of the clay. The artisan's expression is one of quiet determination, reflecting the 'karuṇā' (compassion) infused into their work. Style: Photorealistic, high detail, shallow depth of field, dramatic lighting, earthy tones.",
+    "A panoramic view of a group of women artisans in a Gujarat village, sitting on the ground in a circle, hand-building pottery. They are surrounded by stacks of unfired clay pots, drying in the sun. The women are wearing vibrant, traditional clothing with mirror work. In the background, a banyan tree provides shade, and children play nearby. The atmosphere is one of community and collaboration, reflecting the 'kala' (art) and shared heritage. The scene is bathed in the warm, golden light of the late afternoon sun. Style: Photorealistic, wide angle, vibrant colors, natural lighting, sense of community.",
+    "A young artisan, a girl, carefully painting intricate floral patterns on a terracotta vase using natural pigments derived from plants and minerals. The scene takes place in a dimly lit workshop in West Bengal. Sunlight streams through a small window, illuminating the girl's face and the vibrant colors of the pigments. The vase is adorned with traditional Bengali motifs, reflecting the region's rich cultural heritage. Her brow is furrowed in concentration as she meticulously applies each brushstroke, embodying the dedication and intention behind each piece. Style: Photorealistic, soft lighting, close-up, high detail, focus on the artisan's expression."
+  ],
+  "cultural_elements": [
+    "Hand-building pottery",
+    "Natural pigments",
+    "Diya (oil lamp)",
+    "Traditional Indian clothing",
+    "Bengali motifs"
+  ],
+  "recommended_hashtags": [
+    "IndianArtisan",
+    "HandmadePottery",
+    "CulturalHeritage",
+    "IndianCraft",
+    "SustainableArt"
+  ],
+  "artisan_input": "This is a blue pot I made with peacock and lotus flowers, using traditional Jaipur techniques passed down from my grandfather.",
+  "prompt_count": 3
+}

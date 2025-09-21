@@ -1,0 +1,144 @@
+# api/main.py
+import sys
+import os
+import tempfile
+import time
+import json
+import shutil
+import uuid
+from fastapi import FastAPI, UploadFile, Form
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+
+# Add the correct paths to Python path
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+agents_path = os.path.join(project_root, "Agents", "agents")
+sys.path.insert(0, agents_path)
+
+# Import all the agents directly
+from curator_agent import CuratorAgent
+from storyteller_agent import StorytellerAgent
+from image_generator_agent import ImageGeneratorAgent
+from synthesizer_agent import ContentSynthesizer
+from orchestrator import Orchestrator
+
+app = FastAPI()
+
+# Add CORS middleware for frontend communication
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, restrict this
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Create directory for serving generated assets
+os.makedirs("generated_assets", exist_ok=True)
+app.mount("/generated", StaticFiles(directory="generated_assets"), name="generated")
+
+@app.get("/")
+async def root():
+    return {"message": "KalpanaAI Storytelling API"}
+
+@app.post("/api/storytelling/generate")
+async def generate_storytelling_kit(
+    description: str = Form(...),
+    photo: UploadFile = None
+):
+    """
+    Generate complete storytelling marketing kit
+    """
+    try:
+        # Create temporary directory for processing
+        temp_dir = tempfile.mkdtemp()
+        
+        try:
+            # Save uploaded photo if provided
+            photo_path = None
+            if photo and photo.filename:
+                photo_path = os.path.join(temp_dir, photo.filename)
+                with open(photo_path, "wb") as buffer:
+                    content = await photo.read()
+                    buffer.write(content)
+            
+            # Initialize orchestrator
+            orchestrator = Orchestrator()
+            
+            # Run the storytelling pipeline with photo
+            results = orchestrator.run_storytelling_pipeline(description, temp_dir, photo_path)
+            
+            if results["status"] == "success":
+                # Generate complete marketing kit
+                kit_generated = orchestrator.generate_marketing_kit(description, temp_dir)
+                
+                if kit_generated:
+                    # Copy assets to served directory
+                    asset_id = str(uuid.uuid4())
+                    served_dir = os.path.join("generated_assets", asset_id)
+                    os.makedirs(served_dir, exist_ok=True)
+                    
+                    # Copy all generated files
+                    for file in os.listdir(temp_dir):
+                        src = os.path.join(temp_dir, file)
+                        dst = os.path.join(served_dir, file)
+                        if os.path.isfile(src):
+                            shutil.copy2(src, dst)
+                    
+                    # Read the generated marketing kit
+                    kit_path = os.path.join(temp_dir, "marketing_kit.json")
+                    if os.path.exists(kit_path):
+                        with open(kit_path, "r", encoding="utf-8") as f:
+                            marketing_kit = json.load(f)
+                        
+                        # Update paths to use served URLs
+                        if "assets" in marketing_kit:
+                            for i, image in enumerate(marketing_kit["assets"].get("story_images", [])):
+                                marketing_kit["assets"]["story_images"][i] = f"/generated/{asset_id}/{image}"
+                            if "social_post" in marketing_kit["assets"]:
+                                marketing_kit["assets"]["social_post"] = f"/generated/{asset_id}/{marketing_kit['assets']['social_post']}"
+                        
+                        return {
+                            "status": "success",
+                            "marketing_kit": marketing_kit,
+                            "asset_id": asset_id,
+                            "message": "Storytelling marketing kit generated successfully!"
+                        }
+                    else:
+                        return {
+                            "status": "error",
+                            "message": "Marketing kit file not found"
+                        }
+                else:
+                    return {
+                        "status": "error",
+                        "message": "Failed to generate marketing kit"
+                    }
+            else:
+                return {
+                    "status": "error",
+                    "message": results.get("error", "Unknown error occurred")
+                }
+                
+        finally:
+            # Clean up temp directory with retry logic for Windows
+            try:
+                shutil.rmtree(temp_dir)
+            except Exception as e:
+                # On Windows, sometimes files are locked briefly
+                time.sleep(1)  # Wait a moment
+                try:
+                    shutil.rmtree(temp_dir)
+                except Exception as e2:
+                    print(f"Warning: Could not clean up temp directory: {e2}")
+                    # This is OK, OS will clean it up later
+                
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

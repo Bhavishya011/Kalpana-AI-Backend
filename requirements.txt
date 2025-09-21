@@ -1,0 +1,10 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+gunicorn==21.2.0
+python-multipart==0.0.6
+google-cloud-vision>=3.4.0
+google-cloud-firestore>=2.11.0
+google-cloud-aiplatform>=1.38.0
+pillow>=10.0.0
+opencv-python-headless>=4.5.0
+numpy>=1.21.0
