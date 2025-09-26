@@ -1,0 +1,53 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.pytest_cache
+.coverage
+
+# Virtual environments
+.env
+.venv
+env
+venv
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Logs
+*.log
+logs/
+
+# Generated assets (will be created at runtime)
+generated_assets/
+
+# Documentation
+README.md
+*.md
+
+# Development files
+test_*
+*_test.py
+
+# Local development files
+LOCAL_DEVELOPMENT.md

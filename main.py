@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(project_root, 'api'))
 
 # Import the app with a different approach to avoid circular import
 import importlib.util
-spec = importlib.util.spec_from_file_location("api_main", os.path.join(project_root, 'api', 'main.py'))
+spec = importlib.util.spec_from_file_location("api_main", os.path.join(project_root, 'api', 'main2.0.py'))
 api_main = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(api_main)
 app = api_main.app

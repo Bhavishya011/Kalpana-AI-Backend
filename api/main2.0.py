@@ -544,19 +544,22 @@ if __name__ == "__main__":
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
+    # Get port from environment (Cloud Run sets this)
+    port = int(os.environ.get("PORT", 8000))
+    
     print("🚀 Starting KalpanaAI Storytelling API...")
-    print("📍 Server will be available at: http://localhost:8000")
-    print("📖 API Documentation: http://localhost:8000/docs")
-    print("🔧 Health Check: http://localhost:8000/health")
-    print("🎭 Curator Test: http://localhost:8000/test-curator")
-    print("📝 Storytelling: http://localhost:8000/api/storytelling/generate")
+    print(f"📍 Server will be available at: http://localhost:{port}")
+    print(f"📖 API Documentation: http://localhost:{port}/docs")
+    print(f"🔧 Health Check: http://localhost:{port}/health")
+    print(f"🎭 Curator Test: http://localhost:{port}/test-curator")
+    print(f"📝 Storytelling: http://localhost:{port}/api/storytelling/generate")
     print("---")
     
     try:
         uvicorn.run(
             app, 
             host="0.0.0.0", 
-            port=8000,
+            port=port,
             log_level="info",
             access_log=True,
             reload=False,  # Disable reload to prevent crashes
