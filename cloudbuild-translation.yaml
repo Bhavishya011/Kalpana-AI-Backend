@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/nodal-fountain-470717-j1/kalpana-translation'
+      - '-f'
+      - 'Dockerfile.translation'
+      - '.'
+images:
+  - 'gcr.io/nodal-fountain-470717-j1/kalpana-translation'

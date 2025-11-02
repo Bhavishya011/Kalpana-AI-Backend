@@ -1,0 +1,143 @@
+{
+  "last_updated": "2025-10-26T15:43:45.476433",
+  "categories": {
+    "pottery": {
+      "range": [
+        100,
+        440.00000000000006
+      ],
+      "avg_markup": 200.0,
+      "demand": "medium",
+      "trend_score": 6,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:42:48.577440"
+    },
+    "embroidery": {
+      "range": [
+        200,
+        660.0
+      ],
+      "avg_markup": 350.0,
+      "demand": "high",
+      "trend_score": 18,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:42:52.961500"
+    },
+    "jewelry": {
+      "range": [
+        300,
+        1100.0
+      ],
+      "avg_markup": 500.0,
+      "demand": "very_high",
+      "trend_score": 25,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:42:57.442909"
+    },
+    "textile": {
+      "range": [
+        150,
+        550.0
+      ],
+      "avg_markup": 300.0,
+      "demand": "high",
+      "trend_score": 19,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:43:01.789388"
+    },
+    "woodwork": {
+      "range": [
+        150,
+        495.00000000000006
+      ],
+      "avg_markup": 275.0,
+      "demand": "medium",
+      "trend_score": 15,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:43:06.408224"
+    },
+    "metalwork": {
+      "range": [
+        250,
+        770.0000000000001
+      ],
+      "avg_markup": 425.0,
+      "demand": "medium",
+      "trend_score": 22,
+      "trend_direction": "rising",
+      "last_updated": "2025-10-26T15:43:11.199717"
+    },
+    "painting": {
+      "range": [
+        250,
+        800
+      ],
+      "avg_markup": 475.0,
+      "demand": "high",
+      "trend_score": 55,
+      "trend_direction": "stable",
+      "last_updated": "2025-10-26T15:43:15.493524"
+    },
+    "leather": {
+      "range": [
+        150,
+        427.5
+      ],
+      "avg_markup": 275.0,
+      "demand": "medium",
+      "trend_score": 50,
+      "trend_direction": "falling",
+      "last_updated": "2025-10-26T15:43:19.863800"
+    }
+  },
+  "regional_trends": {
+    "rajasthan": {
+      "regional_score": 5
+    },
+    "gujarat": {
+      "regional_score": 2
+    },
+    "kerala": {
+      "regional_score": 2
+    }
+  },
+  "seasonal_trends": {
+    "diwali gifts": {
+      "score": 14,
+      "multiplier": 1.0,
+      "active": false
+    },
+    "wedding gifts india": {
+      "score": 0,
+      "multiplier": 1.0,
+      "active": false
+    },
+    "holi colors": {
+      "score": 0,
+      "multiplier": 1.0,
+      "active": false
+    },
+    "raksha bandhan gifts": {
+      "score": 0,
+      "multiplier": 1.0,
+      "active": false
+    },
+    "christmas decorations india": {
+      "score": 0,
+      "multiplier": 1.0,
+      "active": false
+    }
+  },
+  "trending_crafts": [
+    {
+      "category": "embroidery",
+      "score": 71,
+      "keyword": "indian embroidery"
+    },
+    {
+      "category": "painting",
+      "score": 66,
+      "keyword": "madhubani painting"
+    }
+  ]
+}

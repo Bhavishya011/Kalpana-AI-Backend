@@ -23,6 +23,7 @@ from curator_agent import CuratorAgent
 from storyteller_agent import StorytellerAgent
 from image_generator_agent import ImageGeneratorAgent
 from synthesizer_agent import ContentSynthesizer
+from pricing_agent import DynamicPricingAgent
 
 
 # Configure logging
@@ -69,6 +70,13 @@ class Orchestrator:
             logger.info("✅ Synthesizer Agent initialized successfully")
         except Exception as e:
             logger.error(f"❌ Synthesizer initialization failed: {str(e)}")
+            raise
+        
+        try:
+            self.pricing_agent = DynamicPricingAgent()
+            logger.info("✅ Pricing Agent initialized successfully")
+        except Exception as e:
+            logger.error(f"❌ Pricing Agent initialization failed: {str(e)}")
             raise
     
     def get_model_status(self) -> dict:
@@ -185,6 +193,23 @@ class Orchestrator:
             ecommerce = self.synthesizer.create_ecommerce_content(validated_prompts)
             results["outputs"]["ecommerce"] = ecommerce
             print("✅ Story-focused e-commerce content formatted")
+            
+            # 4. Pricing Agent: Calculate dynamic pricing
+            print("\n💰 Step 4: Calculating AI-powered dynamic pricing...")
+            try:
+                pricing_result = self.pricing_agent.calculate_price(
+                    artisan_description,
+                    validated_prompts,
+                    material_cost=100.0  # Default material cost, can be parameterized
+                )
+                results["outputs"]["pricing"] = pricing_result
+                print(f"✅ Suggested Price: ₹{pricing_result['suggested_price']}")
+                print(f"   Price Range: ₹{pricing_result['price_range']['min']} - ₹{pricing_result['price_range']['max']}")
+                print(f"   Success Probability: {pricing_result['success_probability']}%")
+            except Exception as e:
+                print(f"⚠️ Pricing calculation failed: {str(e)}")
+                logger.warning(f"Pricing calculation failed: {str(e)}")
+                # Continue without pricing
             
             # Save final results
             results["status"] = "success"

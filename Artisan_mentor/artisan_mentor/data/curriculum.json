@@ -1,0 +1,182 @@
+{
+    "foundation": {
+        "title": "🎯 Foundation Builder",
+        "description": "Master the basics of your craft business",
+        "level": "BEGINNER",
+        "prerequisites": [],
+        "estimated_duration": "2-3 weeks",
+        "lessons": [
+            {
+                "id": "F1.1",
+                "title": "📸 Craft Photography Mastery",
+                "objective": "Take 5 professional photos using smartphone",
+                "action_type": "photo_upload",
+                "learning_style": ["VISUAL", "KINESTHETIC"],
+                "prompt_template": "Analyze this {craft_type} and provide specific photography guidance:\n- Best lighting conditions for {materials}\n- Ideal angles to showcase {unique_features}\n- Background suggestions that complement {dominant_colors}\n- Common mistakes to avoid\nProvide 3 actionable tips.",
+                "validation_criteria": ["lighting_quality", "composition", "detail_visibility"],
+                "reward": "📸 Photo Pro Badge",
+                "points": 25,
+                "difficulty": 1
+            },
+            {
+                "id": "F1.2",
+                "title": "📖 Your Origin Story",
+                "objective": "Craft a compelling 2-minute origin story",
+                "action_type": "voice_or_text",
+                "learning_style": ["AUDITORY", "READ_WRITE"],
+                "prompt_template": "Help artisan create origin story for {craft_name} from {region}.\nFocus on:\n- Cultural heritage of {cultural_context}\n- Personal connection to craft\n- Emotional journey\n- Cultural significance\nStructure: Problem → Discovery → Mastery → Mission",
+                "validation_criteria": ["emotional_connection", "cultural_authenticity", "clear_narrative"],
+                "reward": "📖 Storyteller Badge",
+                "points": 30,
+                "difficulty": 1
+            },
+            {
+                "id": "F1.3",
+                "title": "💰 Basic Cost Calculation",
+                "objective": "Calculate accurate cost for one product",
+                "action_type": "calculation",
+                "learning_style": ["READ_WRITE", "KINESTHETIC"],
+                "prompt_template": "Guide artisan to calculate total cost for {craft_name}:\n- Material costs breakdown\n- Time investment calculation\n- Hidden costs (packaging, shipping)\n- Minimum price calculation\nProvide simple formula and example.",
+                "validation_criteria": ["accurate_calculation", "includes_all_costs", "realistic_pricing"],
+                "reward": "💰 Cost Calculator Badge",
+                "points": 30,
+                "difficulty": 2
+            }
+        ]
+    },
+    "marketplace_ready": {
+        "title": "🛒 Marketplace Pro",
+        "description": "Create winning product listings across platforms",
+        "level": "INTERMEDIATE",
+        "prerequisites": ["foundation"],
+        "estimated_duration": "3-4 weeks",
+        "lessons": [
+            {
+                "id": "M2.1",
+                "title": "🏷️ SEO Listing Optimization",
+                "objective": "Create optimized listings for 3 marketplaces",
+                "action_type": "text_generation",
+                "learning_style": ["READ_WRITE"],
+                "prompt_template": "Generate optimized listings for {craft_name} on:\n1. Etsy: Focus handmade, storytelling\n2. Amazon: Focus utility, mass appeal\n3. Indian Marketplaces: Focus value, cultural significance\n\nInclude for each:\n- SEO title (<60 chars)\n- Compelling description (150 words)\n- 10 search tags\n- Key features highlighting {unique_selling_points}",
+                "validation_criteria": ["platform_optimized", "seo_friendly", "compelling_description"],
+                "reward": "🏷️ Listing Expert Badge",
+                "points": 40,
+                "difficulty": 2
+            },
+            {
+                "id": "M2.2",
+                "title": "💰 Advanced Pricing Strategy",
+                "objective": "Create 3-tier pricing model",
+                "action_type": "calculation",
+                "learning_style": ["READ_WRITE", "VISUAL"],
+                "prompt_template": "Develop pricing strategy for {craft_name}:\n- Material cost: {material_cost_estimate}\n- Time investment: {time_estimate} hours\n- Skill level: {skill_level}\n\nCreate:\n1. Economy tier (basic)\n2. Standard tier (premium materials)\n3. Luxury tier (customization + storytelling)\n\nInclude profit margins and market comparison.",
+                "validation_criteria": ["cost_coverage", "competitive_positioning", "profit_margins"],
+                "reward": "💰 Pricing Strategist Badge",
+                "points": 45,
+                "difficulty": 3
+            },
+            {
+                "id": "M2.3",
+                "title": "📦 Packaging & Presentation",
+                "objective": "Design memorable unboxing experience",
+                "action_type": "design",
+                "learning_style": ["VISUAL", "KINESTHETIC"],
+                "prompt_template": "Create packaging strategy for {craft_name}:\n- Eco-friendly materials\n- Brand storytelling elements\n- Cultural design motifs\n- Cost-effective solutions\n- Photography for online listing\nProvide 3 packaging concepts.",
+                "validation_criteria": ["brand_aligned", "cost_effective", "memorable"],
+                "reward": "📦 Packaging Pro Badge",
+                "points": 35,
+                "difficulty": 2
+            }
+        ]
+    },
+    "digital_marketing": {
+        "title": "📈 Digital Growth Engine",
+        "description": "Master social media and digital advertising",
+        "level": "ADVANCED",
+        "prerequisites": ["marketplace_ready"],
+        "estimated_duration": "4-5 weeks",
+        "lessons": [
+            {
+                "id": "D3.1",
+                "title": "📱 Social Media Content Strategy",
+                "objective": "Create 30-day content calendar",
+                "action_type": "content_plan",
+                "learning_style": ["VISUAL", "READ_WRITE"],
+                "prompt_template": "Develop 30-day social media plan for {craft_business}:\n\nAWARENESS (Days 1-10):\n- Behind-the-scenes content\n- Cultural storytelling\n- Process videos\n\nCONSIDERATION (Days 11-20):\n- Customer testimonials\n- Craft tutorials\n- Live Q&A sessions\n\nCONVERSION (Days 21-30):\n- Limited offers\n- Urgency campaigns\n- Success stories\n\nInclude post types, captions, hashtags.",
+                "validation_criteria": ["funnel_structure", "content_variety", "engagement_strategy"],
+                "reward": "📱 Content Strategist Badge",
+                "points": 50,
+                "difficulty": 4
+            },
+            {
+                "id": "D3.2",
+                "title": "🎯 Micro-Budget Ad Campaigns",
+                "objective": "Run profitable ads with ₹1000 budget",
+                "action_type": "ad_copy",
+                "learning_style": ["READ_WRITE", "VISUAL"],
+                "prompt_template": "Create ad campaign for {craft_product}:\n- Total budget: ₹1000\n- Target: {target_markets}\n- Platforms: Facebook/Instagram/Google\n\nDeliver:\n1. 3 ad copies (emotional, feature-based, urgency)\n2. Audience targeting strategy\n3. Daily budget allocation\n4. Success metrics to track\n5. A/B testing plan",
+                "validation_criteria": ["budget_optimization", "targeting_precision", "conversion_focus"],
+                "reward": "🎯 Ad Strategist Badge",
+                "points": 55,
+                "difficulty": 4
+            },
+            {
+                "id": "D3.3",
+                "title": "🎬 Video Marketing Basics",
+                "objective": "Create 3 engaging short videos",
+                "action_type": "video_creation",
+                "learning_style": ["VISUAL", "KINESTHETIC"],
+                "prompt_template": "Plan video content for {craft_name}:\n1. 30-sec Process video (Reels/Shorts)\n2. 1-min Customer testimonial\n3. 2-min Craft story documentary\n\nFor each video provide:\n- Script outline\n- Shot list\n- Music suggestions\n- Caption & hashtags\n- Best posting times",
+                "validation_criteria": ["engaging_content", "clear_message", "platform_optimized"],
+                "reward": "🎬 Video Creator Badge",
+                "points": 50,
+                "difficulty": 4
+            }
+        ]
+    },
+    "global_expansion": {
+        "title": "🌍 Global Business Scale",
+        "description": "Expand internationally and scale operations",
+        "level": "EXPERT",
+        "prerequisites": ["digital_marketing"],
+        "estimated_duration": "5-6 weeks",
+        "lessons": [
+            {
+                "id": "G4.1",
+                "title": "🚚 International Export Mastery",
+                "objective": "Setup complete export process",
+                "action_type": "business_plan",
+                "learning_style": ["READ_WRITE"],
+                "prompt_template": "Create export plan for {craft_type} to:\n1. United States (premium market)\n2. Europe (sustainability-focused)\n3. UAE (luxury market)\n\nInclude for each:\n- Customs documentation checklist\n- Packaging requirements\n- Shipping logistics options\n- Pricing adjustments (duties, shipping)\n- Cultural adaptations needed\n- Marketing approach",
+                "validation_criteria": ["documentation_completeness", "logistical_planning", "market_adaptation"],
+                "reward": "🌍 Global Exporter Badge",
+                "points": 70,
+                "difficulty": 5
+            },
+            {
+                "id": "G4.2",
+                "title": "🏢 Business Scaling & Team Building",
+                "objective": "Create 1-year scaling plan",
+                "action_type": "strategic_plan",
+                "learning_style": ["READ_WRITE"],
+                "prompt_template": "Develop scaling strategy for {craft_business}:\n\nMONTHS 1-3: Foundation\n- Systemize production processes\n- Create training manuals\n- Quality control SOPs\n\nMONTHS 4-6: Team Building\n- Hire first apprentices\n- Delegate production tasks\n- Create team structure\n\nMONTHS 7-12: Expansion\n- New product lines\n- Geographic expansion\n- Partnership development\n- Revenue targets\n\nInclude KPIs and milestones.",
+                "validation_criteria": ["scalable_systems", "team_structure", "growth_planning"],
+                "reward": "🏢 Scale Master Badge",
+                "points": 80,
+                "difficulty": 5
+            },
+            {
+                "id": "G4.3",
+                "title": "💼 Brand Building & Storytelling",
+                "objective": "Create comprehensive brand identity",
+                "action_type": "brand_strategy",
+                "learning_style": ["VISUAL", "READ_WRITE"],
+                "prompt_template": "Build complete brand for {craft_business}:\n\nBRAND FOUNDATION:\n- Mission & vision statements\n- Core values\n- Brand personality\n- Target audience personas\n\nVISUAL IDENTITY:\n- Logo concepts\n- Color palette\n- Typography\n- Visual style guide\n\nBRAND STORY:\n- Heritage narrative\n- Founder story\n- Craft journey\n- Social impact\n\nProvide brand guidelines document.",
+                "validation_criteria": ["authentic_story", "consistent_identity", "market_positioning"],
+                "reward": "💼 Brand Builder Badge",
+                "points": 75,
+                "difficulty": 5
+            }
+        ]
+    }
+}

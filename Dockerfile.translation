@@ -1,0 +1,24 @@
+# Dockerfile for Translation Service
+FROM python:3.9-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy translation service
+COPY api/translation_service.py /app/translation_service.py
+
+# Expose port
+EXPOSE 8081
+
+# Run translation service
+CMD ["python", "translation_service.py"]

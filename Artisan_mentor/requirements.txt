@@ -1,0 +1,21 @@
+# FastAPI and Web Server
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.12
+
+# Google Cloud AI Platform
+google-cloud-aiplatform==1.75.0
+vertexai>=1.0.0
+
+# Google Cloud Services
+google-cloud-storage==2.19.0
+google-cloud-firestore==2.21.0
+google-cloud-speech==2.33.0
+google-cloud-texttospeech==2.28.0
+google-cloud-vision==3.10.2
+google-cloud-translate==3.22.0
+
+# Core Dependencies
+pydantic==2.9.2
+python-dotenv==1.0.1
+pillow==11.0.0

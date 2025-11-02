@@ -1,0 +1,25 @@
+steps:
+  # Build the container image from project root (so we can access both api/ and Agents/)
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/kalpana-ai-api'
+      - '-f'
+      - 'api/Dockerfile'
+      - '.'  # Build context is project root
+    
+  # Push the container image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/kalpana-ai-api'
+
+images:
+  - 'gcr.io/$PROJECT_ID/kalpana-ai-api'
+
+timeout: '1200s'
+
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY

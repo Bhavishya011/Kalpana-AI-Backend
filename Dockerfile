@@ -1,30 +1,27 @@
-# Use Python 3.11 slim image for smaller size
-FROM python:3.11-slim
+# Dockerfile
+FROM python:3.9-slim
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Install system dependencies needed for Python packages
+# Install system dependencies needed for some Python packages (e.g., OpenCV)
 RUN apt-get update && apt-get install -y \
     gcc \
-    g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file first for better layer caching
+# Copy the requirements file into the container
 COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the entire project
+# Copy the rest of the application code into the container
+# This copies your api/ and Agents/ folders
 COPY . .
 
-# Set Python path to include Agents directory
-ENV PYTHONPATH="${PYTHONPATH}:/app"
-
-# Expose port (Cloud Run will set PORT environment variable)
+# Expose the port that the application will listen on
 EXPOSE 8080
 
-# Change to api directory and run the server
-WORKDIR /app/api
-CMD ["python", "main2.0.py"]
+# Define the command to run the application
+# Use main.py which imports from api/main2.0.py
+CMD ["python", "main.py"]

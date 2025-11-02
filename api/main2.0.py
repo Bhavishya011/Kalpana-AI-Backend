@@ -20,6 +20,9 @@ from curator_agent import CuratorAgent
 from storyteller_agent import StorytellerAgent
 from image_generator_agent import ImageGeneratorAgent
 from synthesizer_agent import ContentSynthesizer
+from pricing_agent import DynamicPricingAgent
+from market_intelligence import MarketIntelligence
+from craft_dna_agent import CraftDNAAgent, create_craft_dna_for_product
 # from orchestrator import Orchestrator  # Disabled to fix crash issues
 
 app = FastAPI()
@@ -48,7 +51,9 @@ async def favicon():
 
 @app.get("/health")
 async def health():
-    """Health check with agent status"""
+    """Health check with agent status and market intelligence"""
+    from datetime import datetime
+    
     agent_status = {}
     
     try:
@@ -75,11 +80,53 @@ async def health():
     except Exception as e:
         agent_status["curator"] = f"error: {str(e)}"
     
+    try:
+        from pricing_agent import DynamicPricingAgent
+        agent_status["pricing"] = "available"
+    except Exception as e:
+        agent_status["pricing"] = f"error: {str(e)}"
+    
+    # Check market intelligence status
+    market_cache_status = {}
+    try:
+        from market_intelligence import MarketIntelligence
+        market_intel = MarketIntelligence()
+        cache = market_intel.get_market_cache()
+        
+        cache_age_days = 999
+        if cache.get('last_updated'):
+            try:
+                last_updated = datetime.fromisoformat(cache['last_updated'])
+                cache_age_days = (datetime.now() - last_updated).days
+            except:
+                pass
+        
+        market_cache_status = {
+            "status": "available",
+            "last_updated": cache.get('last_updated', 'never'),
+            "age_days": cache_age_days,
+            "needs_update": cache_age_days >= 7,
+            "categories": len(cache.get('categories', {})),
+            "trending_crafts": len(cache.get('trending_crafts', []))
+        }
+        
+        agent_status["market_intelligence"] = "available"
+        
+    except Exception as e:
+        agent_status["market_intelligence"] = f"error: {str(e)}"
+        market_cache_status = {"status": "unavailable", "error": str(e)}
+    
     return {
         "status": "healthy",
-        "version": "2.0-with-curator",
+        "version": "2.0-with-pricing-and-market-intelligence",
         "agents": agent_status,
-        "timestamp": time.time()
+        "market_cache": market_cache_status,
+        "timestamp": time.time(),
+        "services": {
+            "firestore": "connected",
+            "vertex_ai": "connected",
+            "google_trends": "connected" if market_cache_status.get("status") == "available" else "unavailable"
+        }
     }
 
 @app.post("/test-curator")
@@ -223,12 +270,14 @@ async def test_curator_full_pipeline(photo: UploadFile):
 @app.post("/api/storytelling/generate")
 async def generate_storytelling_kit(
     description: str = Form(...),
-    photo: UploadFile = None
+    photo: UploadFile = None,
+    material_cost: float = Form(100.0)
 ):
     """
-    Generate complete storytelling marketing kit
+    Generate complete storytelling marketing kit with dynamic pricing
     """
     print(f"🎯 New storytelling request: {description[:50]}...")
+    print(f"💰 Material cost: ₹{material_cost}")
     start_time = time.time()
     
     try:
@@ -275,6 +324,19 @@ async def generate_storytelling_kit(
             except Exception as e:
                 print(f"❌ Synthesizer initialization failed: {str(e)}")
                 raise Exception(f"Critical agent failure - Synthesizer: {str(e)}")
+            
+            # Initialize pricing agent (optional but recommended)
+            pricing_agent = None
+            pricing_available = False
+            print("💰 Loading pricing agent...")
+            try:
+                pricing_agent = DynamicPricingAgent()
+                pricing_available = True
+                print("✅ Pricing agent initialized successfully")
+            except Exception as e:
+                print(f"⚠️ Pricing agent initialization failed: {str(e)}")
+                print("🔄 Continuing without dynamic pricing...")
+                pricing_available = False
             
             # Initialize curator (optional - might fail)
             curator = None
@@ -418,6 +480,28 @@ async def generate_storytelling_kit(
             
             print("✅ Marketing kit structure created")
             
+            # Step 4: Calculate dynamic pricing
+            if pricing_available:
+                print(f"💰 Calculating AI-powered dynamic pricing with material cost: ₹{material_cost}...")
+                try:
+                    pricing_result = pricing_agent.calculate_price(
+                        description,
+                        validated_prompts,
+                        material_cost=material_cost
+                    )
+                    marketing_kit["pricing"] = pricing_result
+                    print(f"✅ AI Markup (Artisan Value): ₹{pricing_result['suggested_price']}")
+                    print(f"   Material Cost: ₹{material_cost}")
+                    print(f"   Final Price: ₹{pricing_result['suggested_price'] + material_cost}")
+                    print(f"   Price Range: ₹{pricing_result['price_range']['min']} - ₹{pricing_result['price_range']['max']} (markup only)")
+                    print(f"   Success Probability: {pricing_result['success_probability']}%")
+                except Exception as e:
+                    print(f"⚠️ Pricing calculation failed: {str(e)}")
+                    import traceback
+                    print(f"📋 Pricing traceback:\n{traceback.format_exc()}")
+            else:
+                print("⚠️ Pricing agent not available - skipping pricing calculation")
+            
             # Create social post if we have images
             if story_image_paths and len(story_image_paths) > 0:
                 print("📱 Creating social media post...")
@@ -492,13 +576,14 @@ async def generate_storytelling_kit(
                     "story_images_generated": len(story_image_paths) if story_image_paths else 0,
                     "social_post_created": "social_post" in marketing_kit.get("assets", {}),
                     "enhanced_photos_count": len(marketing_kit.get("assets", {}).get("enhanced_photos", [])),
+                    "pricing_calculated": pricing_available and "pricing" in marketing_kit,
                     "processing_time_seconds": processing_time,
                     "files_generated": files_copied
                 }
             }
             
             print("🎉 Marketing kit generation completed successfully!")
-            print(f"📊 Summary: Curator={curator_available}, Images={len(story_image_paths) if story_image_paths else 0}, Enhanced={len(marketing_kit.get('assets', {}).get('enhanced_photos', []))}")
+            print(f"📊 Summary: Curator={curator_available}, Images={len(story_image_paths) if story_image_paths else 0}, Enhanced={len(marketing_kit.get('assets', {}).get('enhanced_photos', []))}, Pricing={'pricing' in marketing_kit}")
             print(f"⏱️ Total processing time: {processing_time} seconds")
             print(f"📁 Files generated: {files_copied}")
             print(f"🆔 Asset ID: {asset_id}")
@@ -534,6 +619,266 @@ async def generate_storytelling_kit(
             "error_type": type(e).__name__
         }
 
+@app.post("/api/update-market-trends")
+async def update_market_trends():
+    """
+    Manually trigger market trends update using Google Trends API.
+    This fetches latest trend data and updates the market cache.
+    Normally runs automatically weekly.
+    """
+    try:
+        print("🔄 Manual market trends update triggered...")
+        market_intel = MarketIntelligence()
+        success = market_intel.update_market_cache()
+        
+        if success:
+            cache = market_intel.get_market_cache()
+            return {
+                "success": True,
+                "message": "Market trends updated successfully",
+                "last_updated": cache['last_updated'],
+                "trending_crafts": cache.get('trending_crafts', []),
+                "categories": {
+                    cat: {
+                        'trend_score': data['trend_score'],
+                        'trend_direction': data['trend_direction'],
+                        'price_range': f"₹{data['range'][0]}-₹{data['range'][1]}"
+                    }
+                    for cat, data in cache['categories'].items()
+                }
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Market trends update failed"
+            }
+    except Exception as e:
+        print(f"❌ Error updating market trends: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@app.get("/api/market-trends")
+async def get_market_trends():
+    """
+    Get current market trends data including:
+    - Category trends and scores
+    - Trending crafts
+    - Active seasonal trends
+    - Last update timestamp
+    """
+    try:
+        market_intel = MarketIntelligence()
+        cache = market_intel.get_market_cache()
+        
+        # Format the response
+        response = {
+            "success": True,
+            "last_updated": cache['last_updated'],
+            "cache_age_days": None,
+            "categories": {},
+            "trending_crafts": cache.get('trending_crafts', []),
+            "seasonal_trends": cache.get('seasonal_trends', {}),
+            "regional_trends": cache.get('regional_trends', {})
+        }
+        
+        # Calculate cache age
+        if cache['last_updated']:
+            try:
+                from datetime import datetime
+                last_updated = datetime.fromisoformat(cache['last_updated'])
+                days_old = (datetime.now() - last_updated).days
+                response['cache_age_days'] = days_old
+            except:
+                pass
+        
+        # Format category data
+        for category, data in cache['categories'].items():
+            response['categories'][category] = {
+                'price_range': {
+                    'min': data['range'][0],
+                    'max': data['range'][1],
+                    'avg': data['avg_markup']
+                },
+                'demand': data['demand'],
+                'trend_score': data['trend_score'],
+                'trend_direction': data['trend_direction'],
+                'multiplier': market_intel.get_category_multiplier(category)
+            }
+        
+        # Add seasonal multiplier
+        response['active_seasonal_multiplier'] = market_intel.get_active_seasonal_multiplier()
+        
+        return response
+        
+    except Exception as e:
+        print(f"❌ Error fetching market trends: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e)
+        }
+
+@app.post("/api/translate-text")
+async def translate_text_endpoint(request: dict):
+    """
+    Translate text using Gemini AI
+    
+    Request body:
+    {
+        "prompt": "Translation prompt with text",
+        "targetLanguage": "Hindi",
+        "sourceLanguage": "English"
+    }
+    """
+    try:
+        from google import genai
+        from google.genai import types
+        import os
+        
+        prompt = request.get('prompt', '')
+        target_language = request.get('targetLanguage', 'Hindi')
+        source_language = request.get('sourceLanguage', 'English')
+        
+        print(f"🌐 Translation request: {source_language} → {target_language}")
+        
+        # Initialize Gemini client
+        client = genai.Client(
+            vertexai=True,
+            project=os.getenv('GOOGLE_CLOUD_PROJECT', 'nodal-fountain-470717-j1'),
+            location='us-central1'
+        )
+        
+        # Generate translation
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-exp',
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                temperature=0.1,  # Low temperature for consistent translations
+                max_output_tokens=8192,
+                top_p=0.9,
+                top_k=40,
+            )
+        )
+        
+        translation = response.text.strip()
+        
+        print(f"✅ Translation completed")
+        
+        return {
+            "success": True,
+            "translation": translation,
+            "source_language": source_language,
+            "target_language": target_language
+        }
+        
+    except Exception as e:
+        print(f"❌ Translation error: {e}")
+        import traceback
+        traceback.print_exc()
+        return {
+            "success": False,
+            "error": str(e),
+            "translation": ""
+        }
+
+
+@app.post("/api/craft-dna/generate")
+async def generate_craft_dna(
+    product_id: str = Form(...),
+    artisan_story: str = Form(...),
+    craft_technique: str = Form(...),
+    regional_tradition: str = Form(...),
+    materials: str = Form(...),  # JSON string of materials array
+    cultural_context: str = Form(default=""),
+    artisan_name: str = Form(default=""),
+    artisan_village: str = Form(default=""),
+    artisan_state: str = Form(default=""),
+    artisan_lineage: str = Form(default=""),
+    years_of_experience: int = Form(default=0)
+):
+    """
+    Generate Craft DNA - Digital Heritage & Provenance Record
+    
+    Creates a unique QR code linking to a permanent digital record that preserves
+    cultural authenticity, origin story, and sustainability impact.
+    
+    Returns:
+    - Complete heritage narrative
+    - QR code (base64)
+    - Heritage page URL
+    - Cultural significance analysis
+    - Sustainability metrics
+    - Printable heritage label
+    """
+    try:
+        import json
+        
+        # Parse materials - handle both JSON array and comma-separated string
+        try:
+            materials_list = json.loads(materials) if materials else []
+        except json.JSONDecodeError:
+            # If not JSON, split by comma
+            materials_list = [m.strip() for m in materials.split(',') if m.strip()]
+        
+        # Prepare product data
+        product_data = {
+            "product_id": product_id,
+            "artisan_story": artisan_story,
+            "craft_technique": craft_technique,
+            "regional_tradition": regional_tradition,
+            "materials": materials_list,
+            "cultural_context": cultural_context,
+            "artisan_profile": {
+                "name": artisan_name,
+                "village": artisan_village,
+                "state": artisan_state,
+                "lineage": artisan_lineage,
+                "years_of_experience": years_of_experience
+            }
+        }
+        
+        # Generate Craft DNA
+        craft_dna = create_craft_dna_for_product(product_data)
+        
+        # Generate printable label
+        agent = CraftDNAAgent()
+        printable_label = agent.generate_printable_heritage_label(craft_dna)
+        
+        return {
+            "success": True,
+            "craft_dna": craft_dna,
+            "printable_label": printable_label,
+            "message": "Craft DNA generated successfully - Your craft's story is now permanently preserved!"
+        }
+        
+    except Exception as e:
+        import traceback
+        return {
+            "success": False,
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }
+
+
+@app.get("/heritage/{heritage_id}")
+async def get_heritage_page(heritage_id: str):
+    """
+    Heritage page endpoint - Returns craft heritage information by ID
+    This would typically query Firestore for the stored Craft DNA record
+    """
+    # TODO: Integrate with Firestore to fetch actual heritage record
+    return {
+        "heritage_id": heritage_id,
+        "message": "Heritage page - Connect to Firestore to display full craft story",
+        "instructions": "Scan the QR code on the product to view the artisan's story"
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     import logging
@@ -544,22 +889,19 @@ if __name__ == "__main__":
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
     
-    # Get port from environment (Cloud Run sets this)
-    port = int(os.environ.get("PORT", 8000))
-    
     print("🚀 Starting KalpanaAI Storytelling API...")
-    print(f"📍 Server will be available at: http://localhost:{port}")
-    print(f"📖 API Documentation: http://localhost:{port}/docs")
-    print(f"🔧 Health Check: http://localhost:{port}/health")
-    print(f"🎭 Curator Test: http://localhost:{port}/test-curator")
-    print(f"📝 Storytelling: http://localhost:{port}/api/storytelling/generate")
+    print("📍 Server will be available at: http://localhost:8000")
+    print("📖 API Documentation: http://localhost:8000/docs")
+    print("🔧 Health Check: http://localhost:8000/health")
+    print("🎭 Curator Test: http://localhost:8000/test-curator")
+    print("📝 Storytelling: http://localhost:8000/api/storytelling/generate")
     print("---")
     
     try:
         uvicorn.run(
             app, 
             host="0.0.0.0", 
-            port=port,
+            port=8000,
             log_level="info",
             access_log=True,
             reload=False,  # Disable reload to prevent crashes

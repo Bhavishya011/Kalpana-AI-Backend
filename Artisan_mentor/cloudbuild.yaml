@@ -1,0 +1,11 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '--no-cache'
+      - '-t'
+      - 'gcr.io/nodal-fountain-470717-j1/artisan-mentor-api:latest'
+      - '.'
+images:
+  - 'gcr.io/nodal-fountain-470717-j1/artisan-mentor-api:latest'
+timeout: 1800s

@@ -112,9 +112,9 @@ class CuratorAgent:
         return result
 
     def create_studio_shot(self, image_path: str, upscale: bool = False) -> Image.Image:
-        prompt = "Luxury product photography with dramatic studio lighting, glossy reflections, dark gradient background, cinematic contrast, hyperrealistic detail, premium catalog style"
+        prompt = "Crisp and clean e-commerce product photo for a web catalog. Shot in a perfectly lit light box, ensuring even, shadowless illumination. The product is centered on a pure white (#FFFFFF) background. Optimized for digital display, vibrant colors, tack-sharp focus."
         return self.enhance(image_path, prompt, upscale=upscale)
 
     def create_lifestyle_mockup(self, image_path: str, upscale: bool = False) -> Image.Image:
-        prompt = "Vibrant lifestyle shot, product on a trendy desk setup with plants and soft ambient lighting, Instagram aesthetic, sharp focus on product, warm tones, photorealistic"
+        prompt = "Dramatic studio product photography. A single, powerful key light creates deep, elegant shadows, emphasizing the product's form and texture. Shot with a prime lens for exquisite detail and a shallow depth of field. The background is a sophisticated, non-reflective matte grey. Cinematic quality, ultra-detailed."
         return self.enhance(image_path, prompt, upscale=upscale)
