@@ -2,6 +2,8 @@
 # Separate from main product pipeline
 import sys
 import os
+from fastapi import UploadFile, File
+import base64
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -290,6 +292,55 @@ async def translate(request: TranslationRequest):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
+
+@app.post("/transcribe")
+async def transcribe_audio(
+    file: UploadFile = File(...),
+    target_language: str = "English" # We keep this parameter to avoid breaking the frontend call, but we won't force translation
+):
+    """
+    Transcribe audio exactly as spoken (Native Language -> Native Text)
+    """
+    try:
+        from google.genai import types
+        
+        # Read audio bytes
+        audio_content = await file.read()
+        
+        client = get_gemini_client()
+        
+        # 🟢 UPDATED PROMPT: Strictly Transcribe, Do Not Translate
+        prompt = f"""
+        You are a helpful assistant for Indian artisans. 
+        Listen to this audio. The speaker might be speaking in English, Hindi, Tamil, Bengali, or another Indian language.
+        
+        Task:
+        1. Transcribe the speech EXACTLY as spoken in the original language. 
+           (e.g., If the audio is in Hindi, output Hindi script like "मिट्टी का बर्तन". If Tamil, output Tamil script).
+        2. Do NOT translate it to English.
+        3. Return ONLY the transcription text.
+        4. Do not include markdown or timestamps.
+        """
+
+        response = client.models.generate_content(
+            model='gemini-2.0-flash-exp',
+            contents=[
+                types.Part.from_text(text=prompt),
+                types.Part.from_bytes(data=audio_content, mime_type=file.content_type or "audio/webm")
+            ]
+        )
+        
+        return {
+            "success": True,
+            "transcription": response.text.strip()
+        }
+        
+    except Exception as e:
+        print(f"❌ Transcription error: {e}")
+        return {
+            "success": False,
+            "error": str(e)
+        }
 
 if __name__ == "__main__":
     import uvicorn
