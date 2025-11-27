@@ -3,3 +3,4 @@ uvicorn[standard]==0.34.0
 pydantic==2.10.3
 google-cloud-aiplatform==1.71.0
 python-multipart==0.0.20
+google-cloud-speech==2.27.0

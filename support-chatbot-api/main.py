@@ -7,11 +7,12 @@ import os
 import json
 from datetime import datetime
 from typing import List, Dict, Optional
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import vertexai
 from vertexai.generative_models import GenerativeModel, ChatSession
+from google.cloud import speech_v1p1beta1 as speech
 
 # Initialize FastAPI
 app = FastAPI(
@@ -329,6 +330,70 @@ async def quick_help(category: str):
         "response": response,
         "timestamp": datetime.now().isoformat()
     }
+
+@app.post("/transcribe")
+async def transcribe_audio(file: UploadFile = File(...)):
+    """
+    Transcribe audio file to text using Google Cloud Speech-to-Text
+    Supports multiple Indian languages
+    """
+    try:
+        # Read audio file
+        audio_content = await file.read()
+        
+        # Initialize Speech client
+        client = speech.SpeechClient()
+        
+        # Configure audio and recognition settings
+        audio = speech.RecognitionAudio(content=audio_content)
+        
+        config = speech.RecognitionConfig(
+            encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
+            sample_rate_hertz=48000,
+            language_code="en-US",  # Default to English
+            alternative_language_codes=[
+                "hi-IN",  # Hindi
+                "bn-IN",  # Bengali
+                "ta-IN",  # Tamil
+                "te-IN",  # Telugu
+                "mr-IN",  # Marathi
+                "gu-IN",  # Gujarati
+                "kn-IN",  # Kannada
+                "ml-IN",  # Malayalam
+                "pa-IN",  # Punjabi
+            ],
+            enable_automatic_punctuation=True,
+            model="default",
+        )
+        
+        # Perform speech recognition
+        response = client.recognize(config=config, audio=audio)
+        
+        # Extract transcription
+        transcription = ""
+        if response.results:
+            transcription = " ".join([result.alternatives[0].transcript for result in response.results])
+        
+        if not transcription:
+            return {
+                "success": False,
+                "error": "No speech detected in audio",
+                "transcription": ""
+            }
+        
+        return {
+            "success": True,
+            "transcription": transcription,
+            "language": response.results[0].language_code if response.results else "en-US"
+        }
+        
+    except Exception as e:
+        print(f"Transcription error: {str(e)}")
+        return {
+            "success": False,
+            "error": f"Transcription failed: {str(e)}",
+            "transcription": ""
+        }
 
 if __name__ == "__main__":
     import uvicorn
