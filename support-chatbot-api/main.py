@@ -335,11 +335,12 @@ async def quick_help(category: str):
 async def transcribe_audio(file: UploadFile = File(...)):
     """
     Transcribe audio file to text using Google Cloud Speech-to-Text
-    Supports multiple Indian languages
+    Supports multiple Indian languages with Hindi as primary
     """
     try:
         # Read audio file
         audio_content = await file.read()
+        print(f"📥 Received audio file: {file.filename}, size: {len(audio_content)} bytes")
         
         # Initialize Speech client
         client = speech.SpeechClient()
@@ -347,12 +348,13 @@ async def transcribe_audio(file: UploadFile = File(...)):
         # Configure audio and recognition settings
         audio = speech.RecognitionAudio(content=audio_content)
         
+        # Try with Hindi as primary language first (since most Indian artisans speak Hindi)
         config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
             sample_rate_hertz=48000,
-            language_code="en-US",  # Default to English
+            language_code="hi-IN",  # Hindi as primary
             alternative_language_codes=[
-                "hi-IN",  # Hindi
+                "en-IN",  # Indian English
                 "bn-IN",  # Bengali
                 "ta-IN",  # Tamil
                 "te-IN",  # Telugu
@@ -361,20 +363,31 @@ async def transcribe_audio(file: UploadFile = File(...)):
                 "kn-IN",  # Kannada
                 "ml-IN",  # Malayalam
                 "pa-IN",  # Punjabi
+                "en-US",  # English
             ],
             enable_automatic_punctuation=True,
             model="default",
+            use_enhanced=True,  # Use enhanced model for better accuracy
         )
+        
+        print("🎤 Starting speech recognition with Hindi as primary language...")
         
         # Perform speech recognition
         response = client.recognize(config=config, audio=audio)
         
+        print(f"📊 Recognition complete. Results: {len(response.results) if response.results else 0}")
+        
         # Extract transcription
         transcription = ""
+        detected_language = "hi-IN"
+        
         if response.results:
             transcription = " ".join([result.alternatives[0].transcript for result in response.results])
+            detected_language = response.results[0].language_code if hasattr(response.results[0], 'language_code') else "hi-IN"
+            print(f"✅ Transcription successful: '{transcription[:50]}...' (Language: {detected_language})")
         
         if not transcription:
+            print("⚠️ No speech detected in audio")
             return {
                 "success": False,
                 "error": "No speech detected in audio",
@@ -384,11 +397,13 @@ async def transcribe_audio(file: UploadFile = File(...)):
         return {
             "success": True,
             "transcription": transcription,
-            "language": response.results[0].language_code if response.results else "en-US"
+            "language": detected_language
         }
         
     except Exception as e:
-        print(f"Transcription error: {str(e)}")
+        print(f"❌ Transcription error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return {
             "success": False,
             "error": f"Transcription failed: {str(e)}",
