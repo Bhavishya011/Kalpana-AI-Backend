@@ -348,13 +348,15 @@ async def transcribe_audio(file: UploadFile = File(...)):
         # Configure audio and recognition settings
         audio = speech.RecognitionAudio(content=audio_content)
         
-        # Try with Hindi as primary language first (since most Indian artisans speak Hindi)
+        # Use automatic language detection with both Hindi and English
+        # This will correctly detect and transcribe each language in its own script
         config = speech.RecognitionConfig(
             encoding=speech.RecognitionConfig.AudioEncoding.WEBM_OPUS,
             sample_rate_hertz=48000,
-            language_code="hi-IN",  # Hindi as primary
+            language_code="en-IN",  # Indian English as base
             alternative_language_codes=[
-                "en-IN",  # Indian English
+                "hi-IN",  # Hindi
+                "en-US",  # US English
                 "bn-IN",  # Bengali
                 "ta-IN",  # Tamil
                 "te-IN",  # Telugu
@@ -363,14 +365,13 @@ async def transcribe_audio(file: UploadFile = File(...)):
                 "kn-IN",  # Kannada
                 "ml-IN",  # Malayalam
                 "pa-IN",  # Punjabi
-                "en-US",  # English
             ],
             enable_automatic_punctuation=True,
             model="default",
             use_enhanced=True,  # Use enhanced model for better accuracy
         )
         
-        print("🎤 Starting speech recognition with Hindi as primary language...")
+        print("🎤 Starting speech recognition with automatic language detection...")
         
         # Perform speech recognition
         response = client.recognize(config=config, audio=audio)
