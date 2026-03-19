@@ -1,126 +1,181 @@
-# KalpanaAI Backend 🎨🤖
+# KalpanaAI Backend
 
-## Overview
-KalpanaAI Backend is an AI-powered storytelling and image enhancement platform designed specifically for artisans. It combines multiple AI agents to create compelling marketing content, enhance product photos, and generate personalized stories that connect artisans with their customers.
+## Google Cloud-Native AI Agent System for Artisan Empowerment
 
-## 🚀 Features
+KalpanaAI Backend is an AI-powered storytelling and image enhancement platform designed for artisans. It combines specialized Python agents to produce compelling marketing assets, improve product photography, and generate culturally grounded narratives for commerce.
 
-### AI Agents Architecture
-- **🖼️ Image Generator Agent** - Creates story-driven visuals using Vertex AI Imagen 4.0
-- **📖 Storyteller Agent** - Crafts compelling narratives using Gemini 2.0 Flash
-- **🎭 Curator Agent** - Enhances product photos with AI-powered editing
-- **🎨 Synthesizer Agent** - Combines content into cohesive marketing kits
-- **🎼 Orchestrator** - Coordinates all agents for seamless workflows
+## API Endpoint
 
-### Core Capabilities
-- **Photo Enhancement** - AI-powered product photo optimization
-- **Story Generation** - Personalized narrative creation
-- **Image Creation** - AI-generated marketing visuals
-- **Social Media Posts** - Ready-to-use promotional content
-- **Marketing Kits** - Complete content packages
+`https://artisan-mentor-api-508329185712.us-central1.run.app`
 
-## 🛠️ Tech Stack
+Fully operational deployment endpoint for the hosted API.
 
-- **Framework**: FastAPI (Python)
-- **AI Models**: 
-  - Google Vertex AI Imagen 4.0 (Image Generation)
-  - Gemini 2.0 Flash (Text Generation)
-  - Google Vision API (Image Analysis)
-- **Database**: Google Firestore
-- **Deployment**: Google Cloud Platform
-- **Authentication**: Google Cloud IAM
+## Agent Architecture
 
-## 📁 Project Structure
+KalpanaAI backend runs specialized AI agents that are modular, independently testable, and cloud-deployable.
 
-```
+| Agent | Function | Services |
+| --- | --- | --- |
+| Orchestrator | Workflow coordination and fault handling | FastAPI, Cloud Run |
+| Curator | Product photo enhancement | Vision API, Imagen |
+| Storyteller | Culturally grounded storytelling | Gemini, Firestore RAG |
+| Image Generator | Story visual creation | Imagen |
+| Dynamic Price | Fair pricing recommendations | Market intelligence data |
+| Synthesizer | Final marketing kit assembly | Storage pipeline |
+| Craft DNA | Heritage proof and QR generation | Firestore, Storage |
+| Market Intelligence | Trend detection and enrichment | Trends API cache |
+
+## Key Innovations
+
+### Cultural RAG Guardrails
+
+- Firestore-backed cultural knowledge retrieval
+- Heritage-aware prompt design and output checks
+- Confidence-driven review patterns for sensitive cultural outputs
+
+### Agentic Commerce Workflow
+
+- Multi-agent generation pipeline from one product input
+- Story, images, and pricing assembled as a single marketing kit
+- Designed for AP2-style autonomous commerce readiness
+
+### Rural-Optimized Product Flow
+
+- Lightweight payload paths for constrained networks
+- Voice and image-first inputs for creator usability
+- Compatibility with multilingual frontend experiences
+
+## API Endpoints
+
+Main API file: `api/main2.0.py`
+
+- `GET /`
+- `GET /favicon.ico`
+- `GET /health`
+- `POST /test-curator`
+- `POST /test-curator-full`
+- `POST /api/storytelling/generate`
+- `POST /api/update-market-trends`
+- `GET /api/market-trends`
+- `POST /api/translate-text`
+- `POST /api/craft-dna/generate`
+- `GET /heritage/{heritage_id}`
+
+OpenAPI references in this workspace:
+
+- `openapi_schema.json`
+- `Kalpana-AI/openapi_spec.json`
+
+## Tech Stack
+
+| Layer | Technologies |
+| --- | --- |
+| Runtime | Python 3.11, Docker |
+| API | FastAPI, Uvicorn |
+| AI/ML | Vertex AI (Gemini, Imagen), Vision API |
+| Data | Firestore, cached market intelligence |
+| Storage | Local and Cloud Storage-compatible asset flow |
+| Auth | Google Cloud ADC / IAM |
+| Deployment | Google Cloud Run, App Engine |
+| Monitoring | Cloud Logging-compatible structured logs |
+
+## Project Structure
+
+```text
 .
-├── Agents/                     # AI Agent implementations
-│   ├── agents/
-│   │   ├── curator_agent.py    # Photo enhancement agent
-│   │   ├── image_generator_agent.py  # AI image generation
-│   │   ├── storyteller_agent.py     # Story creation agent
-│   │   ├── synthesizer_agent.py     # Content synthesis
-│   │   └── orchestrator.py          # Agent coordination
-│   ├── storytelling_kit/       # Generated content samples
-│   └── test_*.py              # Agent testing scripts
-├── api/                       # FastAPI server implementations
-│   ├── main2.0.py            # Primary server (recommended)
-│   ├── working_main.py       # Stable fallback
-│   └── *.py                  # Various server versions
-├── app.yaml                  # Google Cloud deployment config
-├── requirements.txt          # Python dependencies
-└── README.md                # This file
+|- Agents/
+|  |- agents/
+|  |  |- curator_agent.py
+|  |  |- image_generator_agent.py
+|  |  |- storyteller_agent.py
+|  |  |- synthesizer_agent.py
+|  |  |- orchestrator.py
+|  |  |- pricing_agent.py
+|  |  |- market_intelligence.py
+|  |  |- craft_dna_agent.py
+|  |- storytelling_kit/
+|  |- test_*.py
+|- api/
+|  |- main2.0.py
+|  |- startup_main.py
+|  |- translation_service.py
+|  |- requirements.txt
+|- app.py
+|- app.yaml
+|- Dockerfile
+|- requirements.txt
+|- README.md
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
+
 - Python 3.11+
-- Google Cloud Project with billing enabled
-- Vertex AI API enabled
-- Firestore database configured
+- Google Cloud project with billing enabled
+- Vertex AI and Vision APIs enabled
+- Firestore configured
 
 ### Environment Setup
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Bhavishya011/Kalpana-AI-Backend.git
-   cd Kalpana-AI-Backend
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Configure Google Cloud**
-   ```bash
-   gcloud config set project YOUR_PROJECT_ID
-   gcloud auth application-default login
-   ```
-
-4. **Update project configurations**
-   - Edit `Agents/agents/image_generator_agent.py` - Update project ID
-   - Edit `Agents/agents/curator_agent.py` - Update project ID
-   - Edit `app.yaml` - Update GOOGLE_CLOUD_PROJECT
-
-### Running the Server
-
-**Primary Server (Recommended)**
 ```bash
-cd api
-python main2.0.py
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+gcloud config set project YOUR_PROJECT_ID
+gcloud auth application-default login
 ```
 
-**Development Server**
+### Required Environment Variables
+
+```env
+GOOGLE_CLOUD_PROJECT=your-project-id
+GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
+```
+
+### Run the Server
+
+Recommended:
+
 ```bash
+python api/main2.0.py
+```
+
+Alternative dev server:
+
+```bash
+cd api
 uvicorn main2.0:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**Server will be available at:**
-- 🌐 Main: http://localhost:8000
-- 📚 Docs: http://localhost:8000/docs
-- ✅ Health: http://localhost:8000/health
-- 🎭 Test: http://localhost:8000/test-curator
+Local URLs:
 
-## 📡 API Endpoints
+- `http://localhost:8000`
+- `http://localhost:8000/docs`
+- `http://localhost:8000/health`
+- `http://localhost:8000/test-curator`
 
-### Core Endpoints
-- `POST /api/storytelling/generate` - Generate complete marketing kit
-- `GET /health` - Health check
-- `GET /test-curator` - Test image enhancement
-- `GET /generated/{asset_id}/{filename}` - Serve generated assets
+## Request and Response Example
 
-### Request Format
-```json
-{
-  "product_name": "Traditional Kutch Pottery Vase",
-  "description": "Handcrafted ceramic vase with traditional patterns",
-  "photo": "base64_encoded_image_data"
-}
+`POST /api/storytelling/generate` accepts multipart form data.
+
+Typical request fields:
+
+- `description` (required)
+- `photo` (optional file)
+- `material_cost` (optional)
+
+Example request:
+
+```bash
+curl -X POST "http://localhost:8000/api/storytelling/generate" \
+  -F "description=Traditional Kutch pottery vase" \
+  -F "material_cost=150" \
+  -F "photo=@./sample.jpg"
 ```
 
-### Response Format
+Typical response shape:
+
 ```json
 {
   "status": "success",
@@ -128,40 +183,18 @@ uvicorn main2.0:app --reload --host 0.0.0.0 --port 8000
   "marketing_kit": {
     "story_title": "Generated story title",
     "story_text": "Complete narrative",
-    "emotional_theme": "warmth",
     "assets": {
-      "story_images": ["url1", "url2", "url3"],
-      "enhanced_photos": ["enhanced_url1", "enhanced_url2"],
-      "social_post": "social_post_url",
-      "original_photo": "original_url",
-      "image_prompts": ["prompt1", "prompt2"]
+      "story_images": ["url1", "url2"],
+      "enhanced_photos": ["enhanced_url1", "enhanced_url2"]
     }
-  },
-  "processing_info": {
-    "curator_used": true,
-    "enhanced_photos_count": 2,
-    "story_images_generated": 3,
-    "processing_time_seconds": 45.2
   }
 }
 ```
 
-## 🔧 Configuration
-
-### Required Environment Variables
-```bash
-GOOGLE_CLOUD_PROJECT=your-project-id
-GOOGLE_APPLICATION_CREDENTIALS=path/to/service-account.json
-```
-
-### Project IDs to Update
-1. `Agents/agents/image_generator_agent.py` - Line 30
-2. `Agents/agents/curator_agent.py` - Line 25
-3. `app.yaml` - GOOGLE_CLOUD_PROJECT variable
-
-## 🚀 Deployment
+## Deployment
 
 ### Google Cloud Run
+
 ```bash
 gcloud run deploy kalpana-ai-backend \
   --source . \
@@ -171,74 +204,62 @@ gcloud run deploy kalpana-ai-backend \
 ```
 
 ### Google App Engine
+
 ```bash
 gcloud app deploy app.yaml
 ```
 
-## 🧪 Testing
+Deployment helper scripts:
 
-### Test Individual Agents
+- `deploy-cloud-run.sh`
+- `deploy-cloud-run.bat`
+- `deploy_backend.ps1`
+
+## Testing
+
+Agent-level tests:
+
 ```bash
-# Test storyteller
 python Agents/test_storyteller_minimal.py
-
-# Test image generation
 python Agents/test_story_image_generation.py
-
-# Test curator
 python Agents/test_curator_imagen4.py
 ```
 
-### Test Full Pipeline
+Full pipeline test:
+
 ```bash
 python Agents/run_storytelling_pipeline.py
 ```
 
-## 📊 Monitoring
+## Monitoring and Observability
 
-### Health Checks
-- `/health` - Basic server health
-- `/test-curator` - AI agent functionality
+- `/health` for API and agent-level health checks
+- Structured logs for request and pipeline tracing
+- Error details captured in endpoint responses and server logs
 
-### Logging
-The server provides comprehensive logging:
-- Agent initialization status
-- Request processing steps
-- Error handling and debugging
-- Performance metrics
+## Troubleshooting
 
-## 🔍 Troubleshooting
+- `403`: Billing, IAM permissions, or API enablement issue
+- `429`: Quota/rate limit reached
+- `500`: Agent initialization or runtime failure
+- Translation issues: verify translation service deployment and URL configuration
 
-### Common Issues
+## Contributing
 
-1. **Billing Error**: Enable billing on Google Cloud Project
-2. **API Not Enabled**: Enable Vertex AI and Vision APIs
-3. **Authentication**: Run `gcloud auth application-default login`
-4. **Quota Exceeded**: Check API quotas in Google Cloud Console
+1. Fork the repository.
+2. Create a feature branch.
+3. Add or update tests for your changes.
+4. Submit a pull request with clear verification notes.
 
-### Error Codes
-- `403` - Billing/API access issues
-- `429` - Rate limiting
-- `500` - Internal agent failures
+## License
 
-## 🤝 Contributing
+MIT License. See `LICENSE` for details.
 
-1. Fork the repository
-2. Create a feature branch
-3. Test your changes thoroughly
-4. Submit a pull request
+## Contact and Resources
 
-## 📄 License
+- Project Lead: Bhavishya Jain
+- Frontend Repo: `https://github.com/Bhavishya011/Kalpana-AI`
+- Live Demo: `https://kalpana-ai.vercel.app`
+- Hackathon: Google Cloud Gen AI Exchange 2025
 
-This project is licensed under the MIT License.
-
-## 🆘 Support
-
-For issues and questions:
-- Create GitHub issues for bugs
-- Check documentation at `/docs`
-- Review logs for debugging
-
----
-
-**Built with ❤️ for artisans worldwide** 🎨
+KalpanaAI Backend mission: preserve endangered crafts, expand artisan reach, and build ethical AI systems for cultural commerce.
