@@ -94,7 +94,6 @@ OpenAPI references in this workspace:
 |  |  |- market_intelligence.py
 |  |  |- craft_dna_agent.py
 |  |- storytelling_kit/
-|  |- test_*.py
 |- api/
 |  |- main2.0.py
 |  |- startup_main.py
@@ -216,14 +215,6 @@ Deployment helper scripts:
 - `deploy_backend.ps1`
 
 ## Testing
-
-Agent-level tests:
-
-```bash
-python Agents/test_storyteller_minimal.py
-python Agents/test_story_image_generation.py
-python Agents/test_curator_imagen4.py
-```
 
 Full pipeline test:
 

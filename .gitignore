@@ -71,3 +71,10 @@ generated_assets/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Test files
+test_*
+TEST_*
+run_test*
+*_success.json
+output_craft_gen_*/

@@ -331,10 +331,76 @@ async def add_product(product: NewProduct):
             "success": True,
             "message": f"Product '{product.name}' added successfully",
             "product_id": doc_ref[1].id,
-            "product": product_data
+            "product": {
+                "name": product.name,
+                "category": product.category,
+                "stock_quantity": product.stock_quantity,
+                "reorder_point": product.reorder_point,
+                "price": product.price
+            }
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error adding product: {str(e)}")
+
+@app.get("/api/inventory/products")
+async def get_all_products():
+    """
+    Get all products with their current stock quantities
+    
+    Returns:
+    - List of all products with name, category, stock_quantity, price
+    """
+    try:
+        from google.cloud import firestore
+        db = firestore.Client()
+        
+        products_ref = db.collection("products")
+        docs = products_ref.stream()
+        
+        products = []
+        for doc in docs:
+            data = doc.to_dict()
+            products.append({
+                "id": doc.id,
+                "name": data.get("name", ""),
+                "category": data.get("category", ""),
+                "stock_quantity": data.get("stock_quantity", 0),
+                "reorder_point": data.get("reorder_point", 0),
+                "price": data.get("price", 0.0)
+            })
+        
+        return {
+            "products": products,
+            "total_count": len(products)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error fetching products: {str(e)}")
+
+@app.delete("/api/inventory/delete-product/{product_id}")
+async def delete_product(product_id: str):
+    """
+    Delete a product from inventory
+    
+    Parameters:
+    - **product_id**: ID of the product to delete
+    
+    Returns:
+    - Success message
+    """
+    try:
+        from google.cloud import firestore
+        db = firestore.Client()
+        
+        # Delete the product
+        db.collection("products").document(product_id).delete()
+        
+        return {
+            "success": True,
+            "message": f"Product deleted successfully",
+            "product_id": product_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error deleting product: {str(e)}")
 
 @app.post("/api/inventory/update-stock")
 async def update_stock(update: StockUpdate):
